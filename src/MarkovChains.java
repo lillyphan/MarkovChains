@@ -1,5 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Scanner;
@@ -21,5 +23,17 @@ public class MarkovChains<Key, Value> {
 //                starting again (until you reach the word count requested by the user)
 
 //        5. Implement an extension to the project, as listed below.
+    }
+
+    private File deletePunct(String file) throws FileNotFoundException, IOException{
+        File newFile = new File("nf.txt");
+        Scanner newScanner = new Scanner(newFile);
+        Scanner oldScanner = new Scanner(new File(file));
+        FileWriter fw = new FileWriter("nf.txt");
+        while (oldScanner.hasNextLine()){
+            fw.write(oldScanner.nextLine().replaceAll("\\p{Punct}", ""));
+            fw.close();
+        }
+        return newFile;
     }
 }

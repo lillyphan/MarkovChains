@@ -2,17 +2,31 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class MarkovChains<Key, Value> {
     public static void main(String[] args) throws FileNotFoundException, IOException {
         Scanner s = new Scanner(System.in);
-        String file;
+        String fileName;
         Scanner f;
+        File file;
         Random r = new Random();
-        HashMap<String, String> hm = new HashMap();
+        HashMap<String, ArrayList<String>> hm = new HashMap();
+        String[] words;
+
+        System.out.println("Enter file name: ");
+        fileName = s.nextLine();
+        file = deletePunct(fileName);
+        f = new Scanner(file);
+        while (f.hasNextLine()){
+            words = f.nextLine().split(" ");
+            for (int i = 0; i < words.length - 1; i++){
+                if (!hm.containsKey(words[i])) {
+                    hm.put(words[i], new ArrayList<String>());
+                }
+                hm.get(words[i]).add(words[i + 1]);
+            }
+        }
 
 //        1. Ask the user for a file name. This file should be a text file for the program to train on.
 //

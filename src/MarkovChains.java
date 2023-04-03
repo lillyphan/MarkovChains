@@ -2,13 +2,39 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class MarkovChains<Key, Value> {
     public static void main(String[] args) throws FileNotFoundException, IOException {
-        deletePunct("greatgatsby.txt");
+        Scanner s = new Scanner(System.in);
+        String fileName;
+        Scanner f;
+        File file;
+        Random r = new Random();
+        HashMap<String, ArrayList<String>> hm = new HashMap();
+        String[] words;
+        ArrayList<String> beginners = new ArrayList<>();
+        fill(beginners);
+        ArrayList<String> end = new ArrayList<>();
+        end.add(".");
+        end.add("!");
+
+        System.out.println("Enter file name: ");
+        fileName = s.nextLine();
+        file = deletePunct(fileName);
+        f = new Scanner(file);
+        while (f.hasNextLine()){
+            words = f.nextLine().split(" ");
+            for (int i = 0; i < words.length - 1; i++){
+                if (!hm.containsKey(words[i])) {
+                    hm.put(words[i], new ArrayList<String>());
+                }
+                hm.get(words[i]).add(words[i + 1]);
+            }
+        }
+
+        System.out.println(Arrays.asList(hm));
+
 //        1. Ask the user for a file name. This file should be a text file for the program to train on.
 //
 //        2. Read in the lines of text from that file and store them in a HashMap/Dictionary with the following format:
@@ -42,5 +68,26 @@ public class MarkovChains<Key, Value> {
         }
         fw.close();
         return newFile;
+    }
+
+    private static void fill(ArrayList<String> array){
+        array.add("She");
+        array.add("I");
+        array.add("The");
+        array.add("A");
+        array.add("She");
+        array.add("Their");
+        array.add("We");
+        array.add("When");
+        array.add("There");
+        array.add("And");
+        array.add("They");
+        array.add("All");
+        array.add("He");
+        array.add("His");
+        array.add("It");
+        array.add("My");
+        array.add("In");
+        array.add("At");
     }
 }

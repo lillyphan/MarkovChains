@@ -13,6 +13,11 @@ public class MarkovChains<Key, Value> {
         Random r = new Random();
         HashMap<String, ArrayList<String>> hm = new HashMap();
         String[] words;
+        ArrayList<String> beginners = new ArrayList<>();
+        fill(beginners);
+        ArrayList<String> end = new ArrayList<>();
+        end.add(".");
+        end.add("!");
 
         System.out.println("Enter file name: ");
         fileName = s.nextLine();
@@ -63,5 +68,26 @@ public class MarkovChains<Key, Value> {
         }
         fw.close();
         return newFile;
+    }
+
+    private static void fill(ArrayList<String> array){
+        array.add("She");
+        array.add("I");
+        array.add("The");
+        array.add("A");
+        array.add("She");
+        array.add("Their");
+        array.add("We");
+        array.add("When");
+        array.add("There");
+        array.add("And");
+        array.add("They");
+        array.add("All");
+        array.add("He");
+        array.add("His");
+        array.add("It");
+        array.add("My");
+        array.add("In");
+        array.add("At");
     }
 }

@@ -28,6 +28,8 @@ public class MarkovChains<Key, Value> {
             }
         }
 
+        System.out.println(Arrays.asList(hm));
+
 //        1. Ask the user for a file name. This file should be a text file for the program to train on.
 //
 //        2. Read in the lines of text from that file and store them in a HashMap/Dictionary with the following format:

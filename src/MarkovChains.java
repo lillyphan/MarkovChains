@@ -8,7 +8,12 @@ import java.util.Scanner;
 
 public class MarkovChains<Key, Value> {
     public static void main(String[] args) throws FileNotFoundException, IOException {
-        deletePunct("greatgatsby.txt");
+        Scanner s = new Scanner(System.in);
+        String file;
+        Scanner f;
+        Random r = new Random();
+        HashMap<String, String> hm = new HashMap();
+
 //        1. Ask the user for a file name. This file should be a text file for the program to train on.
 //
 //        2. Read in the lines of text from that file and store them in a HashMap/Dictionary with the following format:

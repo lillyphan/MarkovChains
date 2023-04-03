@@ -7,7 +7,8 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class MarkovChains<Key, Value> {
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws FileNotFoundException, IOException {
+        deletePunct("greatgatsby.txt");
 //        1. Ask the user for a file name. This file should be a text file for the program to train on.
 //
 //        2. Read in the lines of text from that file and store them in a HashMap/Dictionary with the following format:
@@ -25,15 +26,21 @@ public class MarkovChains<Key, Value> {
 //        5. Implement an extension to the project, as listed below.
     }
 
-    private File deletePunct(String file) throws FileNotFoundException, IOException{
+    private static File deletePunct(String file) throws FileNotFoundException, IOException{
         File newFile = new File("nf.txt");
+        newFile.createNewFile();
         Scanner newScanner = new Scanner(newFile);
         Scanner oldScanner = new Scanner(new File(file));
         FileWriter fw = new FileWriter("nf.txt");
         while (oldScanner.hasNextLine()){
-            fw.write(oldScanner.nextLine().replaceAll("\\p{Punct}", ""));
-            fw.close();
+//            System.out.println(oldScanner.nextLine());
+            String s = oldScanner.nextLine().replaceAll("'", "3").replaceAll("-", "4");
+            String s2 = s.replaceAll("\\p{Punct}", "");
+//            fw.write(s);
+            fw.write(s2.replaceAll("3", "'").replaceAll("4", "-"));
+            fw.write("\n");
         }
+        fw.close();
         return newFile;
     }
 }

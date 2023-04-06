@@ -14,11 +14,8 @@ public class MarkovChains<Key, Value> {
         HashMap<String, ArrayList<String>> hm = new HashMap();
         String[] words;
         ArrayList<String> beginners = new ArrayList<>();
-        fill(beginners);
-        ArrayList<String> endPunc = new ArrayList<>();
-        endPunc.add(".");
-        endPunc.add("!");
         ArrayList<String> endWords = new ArrayList<>();
+        fill(beginners);
 
         System.out.println("Enter file name: ");
         fileName = s.nextLine();
@@ -26,14 +23,25 @@ public class MarkovChains<Key, Value> {
         f = new Scanner(file);
         while (f.hasNextLine()){
             words = f.nextLine().split(" ");
+            endWords.add(words[(words.length) - 1] + ".");
+            hm.put(words[(words.length) - 1] + ".", new ArrayList<String>());
             for (int i = 0; i < words.length - 1; i++){
+//                System.out.println(i + ": " + words[i]);
                 if (!hm.containsKey(words[i])) {
+                    if ((words[i].charAt(words[i].length()-1) == '.')) {
+                        endWords.add(words[i]);
+                    }
                     hm.put(words[i], new ArrayList<String>());
-                } else if (!(words[i + 1].charAt(0) >= 65 && words[i + 1].charAt(0) <= 90)) {
+                }
+                if (!Character.isUpperCase(words[i + 1].charAt(0)) || !(words[i + 1].charAt(0) == 'I')){
                     hm.get(words[i]).add(words[i + 1]);
                 }
             }
         }
+
+//        System.out.println(endWords);
+
+//        System.out.println(Arrays.asList(hm)); // method 1
 
         System.out.println("Enter in the number of words you would like to generate: ");
         int numWords = s.nextInt();
@@ -43,19 +51,28 @@ public class MarkovChains<Key, Value> {
         String currWord = YAY.substring(0, YAY.length());
 
         for (int i = 0; i < numWords - 1; i++){
-            if (hm.get(currWord) == null || hm.get(currWord).isEmpty()){
+//            System.out.println(currWord);
+            if (endWords.contains(currWord)){
+//                YAY = YAY + "END";
                 int random = r.nextInt(beginners.size());
-                YAY = YAY.concat(endPunc.get(r.nextInt(2)) + "\n");
                 YAY = YAY.concat(" " + beginners.get(random));
                 currWord = beginners.get(random);
+            } else if (hm.get(currWord).isEmpty()){
+                int random = r.nextInt(beginners.size());
+                YAY = YAY.concat(". " + beginners.get(random));
+                currWord = beginners.get(random);
+            } else {
+                int random = r.nextInt(hm.get(currWord).size());
+                while (beginners.contains(hm.get(currWord).get(random))){
+                    random = r.nextInt(hm.get(currWord).size());
+                }
+                YAY = YAY + " " + hm.get(currWord).get(random);
+                currWord = hm.get(currWord).get(random);
             }
-            System.out.println(hm.get(currWord).size());
-            int random = r.nextInt(hm.get(currWord).size());
-            YAY = YAY + " " + hm.get(currWord).get(random);
-            currWord = hm.get(currWord).get(random);
         }
-
-        YAY = YAY.concat(endPunc.get(r.nextInt(2)));
+        if (YAY.charAt(YAY.length()-1) != '.'){
+            YAY = YAY.concat(".");
+        }
 
         System.out.println(YAY);
 
@@ -83,9 +100,9 @@ public class MarkovChains<Key, Value> {
         Scanner oldScanner = new Scanner(new File(file));
         FileWriter fw = new FileWriter("nf.txt");
         while (oldScanner.hasNextLine()){
-            String s = oldScanner.nextLine().replaceAll("'", "3").replaceAll("-", "4");
+            String s = oldScanner.nextLine().replaceAll("'", "3").replaceAll("-", "4").replaceAll("[.]", "5");
             String s2 = s.replaceAll("\\p{Punct}", "");
-            fw.write(s2.replaceAll("3", "'").replaceAll("4", "-"));
+            fw.write(s2.replaceAll("3", "'").replaceAll("4", "-").replaceAll("5", "."));
             fw.write("\n");
         }
         fw.close();

@@ -30,71 +30,67 @@ public class MarkovChains<Key, Value> {
         file = deletePunct(fileName);
         f = new Scanner(file);
         while (f.hasNextLine()) { //read file and hash words into a Java HashMap
-            words = f.nextLine().split(" "); //split each line into words separated by spaces
-//            endWords.add(words[(words.length) - 1]);
-//            hm.put(words[(words.length) - 1] + ".", new ArrayList<String>());
-            while (f.hasNextLine()) {
-                words = f.nextLine().split(" ");
-                for (int i = 0; i < words.length - 1; i++) {
-                    if (!hm.containsKey(words[i])) {
-                        if ((words[i].charAt(words[i].length() - 1) == '.')) {
+            words = f.nextLine().split(" "); //split each line into words separated by spaces and add to array words
+                for (int i = 0; i < words.length - 1; i++) { //loops through array of words
+                    if (!hm.containsKey(words[i])) { //if the word doesn't exist in HM
+                        if ((words[i].charAt(words[i].length() - 1) == '.')) { //if the word ends in ., add to endWords
                             endWords.add(words[i]);
                         }
-                        hm.put(words[i], new ArrayList<String>());
+                        hm.put(words[i], new ArrayList<String>()); //add to HM key = currWord and value = new ArrayList
                     }
-                    if (!Character.isUpperCase(words[i + 1].charAt(0)) || !(words[i + 1].charAt(0) == 'I')) {
-                        hm.get(words[i]).add(words[i + 1]);
+                    if (!Character.isUpperCase(words[i + 1].charAt(0)) || !(words[i + 1].charAt(0) == 'I')) { //if following word is uncapped or not an I
+                        hm.get(words[i]).add(words[i + 1]); //add it to the HM with following word as key (like normal)
                     }
                 }
-            }
+        }
 
             System.out.println("Enter in the number of words you would like to generate: ");
             int numWords = s.nextInt();
 
             String YAY = "";
-            YAY = YAY.concat(beginners.get(r.nextInt(beginners.size())));
+            YAY = YAY.concat(beginners.get(r.nextInt(beginners.size()))); //start with a beginning word
             String currWord = YAY.substring(0, YAY.length());
 
-            for (int i = 0; i < numWords - 1; i++) {
-                if (endWords.contains(currWord)) {
+            for (int i = 0; i < numWords - 1; i++) { //loop until number of words is reached
+                if (endWords.contains(currWord)) { //if currWord is an endWord
                     int random = r.nextInt(beginners.size());
-                    YAY = YAY.concat(" " + beginners.get(random));
+                    YAY = YAY.concat(" " + beginners.get(random)); //add a new random beginning word
                     currWord = beginners.get(random);
-                } else if (hm.get(currWord) == null || hm.get(currWord).isEmpty()) {
+                } else if (hm.get(currWord) == null || hm.get(currWord).isEmpty()) { //if currWord has no values
                     int random = r.nextInt(beginners.size());
                     if (currWord.charAt(currWord.length() - 1) != '.') {
-                        YAY = YAY.concat(".");
+                        YAY = YAY.concat("."); //end sentence
                     }
-                    YAY = YAY.concat(" " + beginners.get(random));
+                    YAY = YAY.concat(" " + beginners.get(random)); //add random beginner word
                     currWord = beginners.get(random);
                 } else {
                     int random = r.nextInt(hm.get(currWord).size());
-                    while (beginners.contains(hm.get(currWord).get(random))) {
+                    while (beginners.contains(hm.get(currWord).get(random))) { //find a word that isn't a beginner word
                         random = r.nextInt(hm.get(currWord).size());
                     }
-                    YAY = YAY + " " + hm.get(currWord).get(random);
+                    YAY = YAY + " " + hm.get(currWord).get(random); //add following word for currWord's value ArrayList
                     currWord = hm.get(currWord).get(random);
                 }
             }
-            if (YAY.charAt(YAY.length() - 1) != '.') {
+            if (YAY.charAt(YAY.length() - 1) != '.') { //when sentence is done, add a period if sentence is incomplete
                 YAY = YAY.concat(".");
             }
 
-            System.out.println("Enter name of new file: ");
+            System.out.println("Enter name of new file: "); //prompt user for a file name
             s.nextLine();
             String userFileName = s.nextLine();
             FileWriter fw = new FileWriter(userFileName);
-            fw.write(YAY);
+            fw.write(YAY); //write the output into a file
             fw.close();
             System.out.println("File created with the name: " + userFileName);
-        }
     }
 
+    //deletePunc reads in the user-inputed file and rewrites it without selection punctuation for easy hashing
     private static File deletePunct(String file) throws FileNotFoundException, IOException{
         File newFile = new File("nf.txt");
         Scanner oldScanner = new Scanner(new File(file));
         FileWriter fw = new FileWriter("nf.txt");
-        while (oldScanner.hasNextLine()){
+        while (oldScanner.hasNextLine()){ //loops through text file and replaces removes punctuation with exception of ', -, and .
             String s = oldScanner.nextLine().replaceAll("'", "3").replaceAll("-", "4").replaceAll("[.]", "5");
             String s2 = s.replaceAll("\\p{Punct}", "");
             fw.write(s2.replaceAll("3", "'").replaceAll("4", "-").replaceAll("5", "."));
@@ -104,6 +100,7 @@ public class MarkovChains<Key, Value> {
         return newFile;
     }
 
+    //fills beginnerWords with common starter words
     private static void fill(ArrayList<String> array){
             array.add("She");
             array.add("I");

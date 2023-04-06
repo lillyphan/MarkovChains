@@ -14,10 +14,8 @@ public class MarkovChains<Key, Value> {
         HashMap<String, ArrayList<String>> hm = new HashMap();
         String[] words;
         ArrayList<String> beginners = new ArrayList<>();
+        ArrayList<String> endWords = new ArrayList<>();
         fill(beginners);
-        ArrayList<String> end = new ArrayList<>();
-        end.add(".");
-        end.add("!");
 
         System.out.println("Enter file name: ");
         fileName = s.nextLine();
@@ -25,31 +23,54 @@ public class MarkovChains<Key, Value> {
         f = new Scanner(file);
         while (f.hasNextLine()){
             words = f.nextLine().split(" ");
+//            endWords.add(words[(words.length) - 1]);
+//            hm.put(words[(words.length) - 1] + ".", new ArrayList<String>());
             for (int i = 0; i < words.length - 1; i++){
                 if (!hm.containsKey(words[i])) {
+                    if ((words[i].charAt(words[i].length()-1) == '.')) {
+                        endWords.add(words[i]);
+                    }
                     hm.put(words[i], new ArrayList<String>());
                 }
-                hm.get(words[i]).add(words[i + 1]);
+                if (!Character.isUpperCase(words[i + 1].charAt(0)) || !(words[i + 1].charAt(0) == 'I')){
+                    hm.get(words[i]).add(words[i + 1]);
+                }
             }
         }
 
-        System.out.println(Arrays.asList(hm));
+        System.out.println("Enter in the number of words you would like to generate: ");
+        int numWords = s.nextInt();
 
-//        1. Ask the user for a file name. This file should be a text file for the program to train on.
-//
-//        2. Read in the lines of text from that file and store them in a HashMap/Dictionary with the following format:
-//
-//        You may also want to store a list of sentence beginnings and sentence endings in addition to the dictionary! This will make sentence creation easier.
-//
-//        3. Prompt the user for how many words they would like to generate.
-//
-//        4. Output text from the Markov Chain HashMap/Dictionary by:
+        String YAY = "";
+        YAY = YAY.concat(beginners.get(r.nextInt(beginners.size())));
+        String currWord = YAY.substring(0, YAY.length());
 
-//                picking a random starting word
-//                continuing to pull words out of the dictionary until you hit the end of a sentence or run out of keys
-//                starting again (until you reach the word count requested by the user)
+        for (int i = 0; i < numWords - 1; i++){
+            if (endWords.contains(currWord)){
+                int random = r.nextInt(beginners.size());
+                YAY = YAY.concat(" " + beginners.get(random));
+                currWord = beginners.get(random);
+            } else if (hm.get(currWord) == null || hm.get(currWord).isEmpty()){
+                int random = r.nextInt(beginners.size());
+                if (currWord.charAt(currWord.length()-1) != '.'){
+                    YAY = YAY.concat(".");
+                }
+                YAY = YAY.concat(" " + beginners.get(random));
+                currWord = beginners.get(random);
+            } else {
+                int random = r.nextInt(hm.get(currWord).size());
+                while (beginners.contains(hm.get(currWord).get(random))){
+                    random = r.nextInt(hm.get(currWord).size());
+                }
+                YAY = YAY + " " + hm.get(currWord).get(random);
+                currWord = hm.get(currWord).get(random);
+            }
+        }
+        if (YAY.charAt(YAY.length()-1) != '.'){
+            YAY = YAY.concat(".");
+        }
 
-//        5. Implement an extension to the project, as listed below.
+        System.out.println(YAY);
     }
 
     private static File deletePunct(String file) throws FileNotFoundException, IOException{
@@ -59,11 +80,9 @@ public class MarkovChains<Key, Value> {
         Scanner oldScanner = new Scanner(new File(file));
         FileWriter fw = new FileWriter("nf.txt");
         while (oldScanner.hasNextLine()){
-//            System.out.println(oldScanner.nextLine());
-            String s = oldScanner.nextLine().replaceAll("'", "3").replaceAll("-", "4");
+            String s = oldScanner.nextLine().replaceAll("'", "3").replaceAll("-", "4").replaceAll("[.]", "5");
             String s2 = s.replaceAll("\\p{Punct}", "");
-//            fw.write(s);
-            fw.write(s2.replaceAll("3", "'").replaceAll("4", "-"));
+            fw.write(s2.replaceAll("3", "'").replaceAll("4", "-").replaceAll("5", "."));
             fw.write("\n");
         }
         fw.close();
@@ -71,23 +90,19 @@ public class MarkovChains<Key, Value> {
     }
 
     private static void fill(ArrayList<String> array){
-        array.add("She");
-        array.add("I");
-        array.add("The");
-        array.add("A");
-        array.add("She");
-        array.add("Their");
-        array.add("We");
-        array.add("When");
-        array.add("There");
-        array.add("And");
-        array.add("They");
-        array.add("All");
-        array.add("He");
-        array.add("His");
-        array.add("It");
-        array.add("My");
-        array.add("In");
-        array.add("At");
+            array.add("She");
+            array.add("I");
+            array.add("The");
+            array.add("She");
+            array.add("When");
+            array.add("And");
+            array.add("They");
+            array.add("All");
+            array.add("He");
+            array.add("It");
+            array.add("My");
+            array.add("In");
+            array.add("There");
+            array.add("This");
     }
 }

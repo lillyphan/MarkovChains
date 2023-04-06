@@ -1,3 +1,10 @@
+/**
+ * MarkovChains - class that utilizes creates a chain trained on a text file and outputs a String
+ * imitating the diction of the file
+ * Author: Lilly Phan
+ * Date (last edited): 04/6/2023
+ **/
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -6,6 +13,7 @@ import java.util.*;
 
 public class MarkovChains<Key, Value> {
     public static void main(String[] args) throws FileNotFoundException, IOException {
+        //initializations and declarations
         Scanner s = new Scanner(System.in);
         String fileName;
         Scanner f;
@@ -13,16 +21,16 @@ public class MarkovChains<Key, Value> {
         Random r = new Random();
         HashMap<String, ArrayList<String>> hm = new HashMap();
         String[] words;
-        ArrayList<String> beginners = new ArrayList<>();
-        ArrayList<String> endWords = new ArrayList<>();
-        fill(beginners);
+        ArrayList<String> beginners = new ArrayList<>(); //ArrayList of sentence starters
+        ArrayList<String> endWords = new ArrayList<>(); //ArrayList of sentence enders
+        fill(beginners); //fill beginners with words commonly used to start sentences
 
         System.out.println("Enter file name: ");
-        fileName = s.nextLine();
+        fileName = s.nextLine(); //store file name
         file = deletePunct(fileName);
         f = new Scanner(file);
-        while (f.hasNextLine()){
-            words = f.nextLine().split(" ");
+        while (f.hasNextLine()){ //read file and hash words into a Java HashMap
+            words = f.nextLine().split(" "); //split each line into words separated by spaces
 //            endWords.add(words[(words.length) - 1]);
 //            hm.put(words[(words.length) - 1] + ".", new ArrayList<String>());
             for (int i = 0; i < words.length - 1; i++){

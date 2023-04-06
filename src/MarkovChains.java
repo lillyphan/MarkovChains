@@ -23,8 +23,8 @@ public class MarkovChains<Key, Value> {
         f = new Scanner(file);
         while (f.hasNextLine()){
             words = f.nextLine().split(" ");
-            endWords.add(words[(words.length) - 1] + ".");
-            hm.put(words[(words.length) - 1] + ".", new ArrayList<String>());
+//            endWords.add(words[(words.length) - 1]);
+//            hm.put(words[(words.length) - 1] + ".", new ArrayList<String>());
             for (int i = 0; i < words.length - 1; i++){
                 if (!hm.containsKey(words[i])) {
                     if ((words[i].charAt(words[i].length()-1) == '.')) {
@@ -50,9 +50,12 @@ public class MarkovChains<Key, Value> {
                 int random = r.nextInt(beginners.size());
                 YAY = YAY.concat(" " + beginners.get(random));
                 currWord = beginners.get(random);
-            } else if (hm.get(currWord).isEmpty()){
+            } else if (hm.get(currWord) == null || hm.get(currWord).isEmpty()){
                 int random = r.nextInt(beginners.size());
-                YAY = YAY.concat(". " + beginners.get(random));
+                if (currWord.charAt(currWord.length()-1) != '.'){
+                    YAY = YAY.concat(".");
+                }
+                YAY = YAY.concat(" " + beginners.get(random));
                 currWord = beginners.get(random);
             } else {
                 int random = r.nextInt(hm.get(currWord).size());

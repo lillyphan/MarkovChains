@@ -23,8 +23,6 @@ public class MarkovChains<Key, Value> {
         f = new Scanner(file);
         while (f.hasNextLine()){
             words = f.nextLine().split(" ");
-//            endWords.add(words[(words.length) - 1]);
-//            hm.put(words[(words.length) - 1] + ".", new ArrayList<String>());
             for (int i = 0; i < words.length - 1; i++){
                 if (!hm.containsKey(words[i])) {
                     if ((words[i].charAt(words[i].length()-1) == '.')) {
@@ -70,13 +68,18 @@ public class MarkovChains<Key, Value> {
             YAY = YAY.concat(".");
         }
 
-        System.out.println(YAY);
+        System.out.println("Enter name of new file: ");
+        s.nextLine();
+        String userFileName = s.nextLine();
+        FileWriter fw = new FileWriter(userFileName);
+        fw.write(YAY);
+        fw.close();
+        System.out.println("File created with the name: " + userFileName);
+
     }
 
     private static File deletePunct(String file) throws FileNotFoundException, IOException{
         File newFile = new File("nf.txt");
-        newFile.createNewFile();
-        Scanner newScanner = new Scanner(newFile);
         Scanner oldScanner = new Scanner(new File(file));
         FileWriter fw = new FileWriter("nf.txt");
         while (oldScanner.hasNextLine()){
